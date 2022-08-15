@@ -38,7 +38,6 @@ app
   })
   .ready((err) => {
     if (err) console.error(err);
-    console.log(app.config);
   });
 
 app.register(dbConnector);
@@ -51,13 +50,14 @@ app.register(autoLoad, {
   dir: join(__dirname, "routes"),
 });
 
-
 /**
  * Run the server!
  */
+const port = process.env.PORT || 8080;
+
 const start = async () => {
   try {
-    await app.listen({ port: 3000 });
+    await app.listen({ port });
   } catch (err) {
     app.log.error(err);
     process.exit(1);
