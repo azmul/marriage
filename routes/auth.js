@@ -5,9 +5,19 @@
  */
 
 async function routes(fastify, options) {
-  fastify.post("/signup", (req, reply) => {
-    // some code
-    const token = fastify.jwt.sign({ animal: "azmul" });
+  const candidates = fastify.mongo.db.collection("candidates");
+
+  fastify.post("/signup", async (request, reply) => {
+    const {name, email} = request.body;
+
+    const result = await candidates.findOne({ email });
+    if (!result) {
+      const count = await candidates.count();
+      await candidates.insertOne({ ...request.body, id: count + 1, isDelete: false, isDisable: false, isPublish: false });
+      const token = fastify.jwt.sign({ name, email});
+      reply.send({ token });
+    }
+    const token = fastify.jwt.sign({ name, email});
     reply.send({ token });
   });
 

@@ -1,7 +1,7 @@
 import S from "fluent-json-schema";
 
 const bodyJsonSchema = S.object()
-.prop("animal", S.string().required())
+.prop("name", S.string().required())
 .prop(
   "address",
   S.object().required()

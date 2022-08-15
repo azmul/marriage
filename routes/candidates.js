@@ -13,7 +13,7 @@ async function routes(fastify, options, done) {
     return { hello: "world" };
   });
 
-  fastify.get("/animals", async (request, reply) => {
+  fastify.get("/candidates", async (request, reply) => {
     const result = await collection.find().toArray();
     if (result.length === 0) {
       throw new Error("No documents found");
@@ -21,8 +21,8 @@ async function routes(fastify, options, done) {
     return result;
   });
 
-  fastify.get("/animals/:animal", async (request, reply) => {
-    const result = await collection.findOne({ animal: request.params.animal });
+  fastify.get("/candidates/:candidate", async (request, reply) => {
+    const result = await collection.findOne({ name: request.params.name });
     if (!result) {
       throw new Error("Invalid value");
     }
@@ -30,7 +30,7 @@ async function routes(fastify, options, done) {
   });
 
   fastify.post(
-    "/animals",
+    "/candidates",
     { schema: createSchema, preHandler: check },
     async (request, reply) => {
       // we can use the `request.body` object to get the data sent by the client
