@@ -54,10 +54,11 @@ app.register(autoLoad, {
  * Run the server!
  */
 const port = process.env.PORT || 8080;
+const host = process.env.HOST || "0.0.0.0";
 
 const start = async () => {
   try {
-    await app.listen({ port });
+    await app.listen({ port, host });
   } catch (err) {
     app.log.error(err);
     process.exit(1);
