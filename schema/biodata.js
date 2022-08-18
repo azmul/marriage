@@ -15,7 +15,7 @@ const generalInfoBodyJsonSchema = S.object()
   .prop("occupation", S.string().required())
   .prop("monthlyIncome", S.string());
 
-const createGeneralInfoSchema = {
+const generalInfoSchema = {
   body: generalInfoBodyJsonSchema,
 };
 
@@ -25,7 +25,7 @@ const addressBodyJsonSchema = S.object()
   .prop("presentAddress", S.string().required())
   .prop("childhoodPlace", S.string().required());
 
-const createAddressSchema = {
+const addressSchema = {
   body: addressBodyJsonSchema,
 };
 
@@ -40,7 +40,7 @@ const familyBodyJsonSchema = S.object()
   .prop("uncleOccupation", S.string().required())
   .prop("socialStatus", S.string().required());
 
-const createFamilySchema = {
+const familySchema = {
   body: familyBodyJsonSchema,
 };
 
@@ -62,7 +62,7 @@ const personalBodyJsonSchema = S.object()
   .prop("quality", S.string().required())
   .prop("yourslef", S.string().required());
 
-const createPersonaSchema = {
+const personalSchema = {
   body: personalBodyJsonSchema,
 };
 
@@ -72,7 +72,7 @@ const marriageBodyJsonSchema = S.object()
   .prop("gurdianAggree", S.string().required())
   .prop("opinion", S.string().required());
 
-const createMarriageSchema = {
+const marriageSchema = {
   body: marriageBodyJsonSchema,
 };
 
@@ -81,7 +81,7 @@ const otherBodyJsonSchema = S.object()
   .prop("gurdianAggree", S.string().required())
   .prop("opinion", S.string().required());
 
-const createOtherSchema = {
+const otherSchema = {
   body: otherBodyJsonSchema,
 };
 
@@ -99,7 +99,7 @@ const lifePartnerBodyJsonSchema = S.object()
   .prop("familyStatus", S.string().required())
   .prop("quality", S.string().required());
 
-const createLifepartnerSchema = {
+const lifepartnerSchema = {
   body: lifePartnerBodyJsonSchema,
 };
 
@@ -110,7 +110,7 @@ const gurdianPermissionJsonSchema = S.object()
   .prop("trueInformation", S.boolean().required())
   .prop("informationResponsibility", S.boolean().required());
 
-const createGurdianPermissionSchema = {
+const gurdianPermissionSchema = {
   body: gurdianPermissionJsonSchema,
 };
 
@@ -128,53 +128,40 @@ const contactMarriageSchema = {
 /** Eduction Information */
 const educationBodyJsonSchema = S.object()
   .prop("eductionMedium", S.number().required())
-  .prop("otherEduction", S.string().required())
-  .prop(
-    "ssc",
-    S.object()
-      .prop("isSSC", S.boolean().required())
-      .prop("noSscClass", S.string().required())
-      .prop("result", S.string().required())
-      .prop("division", S.string().required())
-      .prop("passingYear", S.string().required())
-  )
-  .prop(
-    "hsc",
-    S.object()
-      .prop("isHSC", S.boolean().required())
-      .prop("noHscClass", S.string().required())
-      .prop("result", S.string().required())
-      .prop("division", S.string().required())
-      .prop("passingYear", S.string().required())
-  )
-  .prop(
-    "diploma",
-    S.object()
-      .prop("subject", S.string().required())
-      .prop("institution", S.string().required())
-      .prop("passingYear", S.string().required())
-  )
-  .prop(
-    "bachelorDegree",
-    S.object()
-      .prop("degreeName", S.string().required())
-      .prop("institution", S.string().required())
-      .prop("passingYear", S.string().required())
-  );
+  .prop("otherEduction", S.string())
+  .prop("hafez", S.boolean())
+  .prop("doaraHadith", S.string())
+  .prop("maximumEduction", S.string())
+  .prop("isSSC", S.boolean())
+  .prop("noSscClass", S.number())
+  .prop("sscResult", S.string())
+  .prop("sscDivision", S.string())
+  .prop("sscPassingYear", S.string())
+  .prop("isHSC", S.boolean())
+  .prop("noHscClass", S.string())
+  .prop("hscResult", S.string())
+  .prop("hscDivision", S.string())
+  .prop("hscPassingYear", S.string())
+  .prop("diplomaSubject", S.string())
+  .prop("diplomaInstitution", S.string())
+  .prop("diplomaPassingYear", S.string())
+  .prop("degreeName", S.string())
+  .prop("degreeInstitution", S.string())
+  .prop("degreePassingYear", S.string());
 
 const educationSchema = {
   body: educationBodyJsonSchema,
 };
 
 export {
-  createGeneralInfoSchema,
-  createAddressSchema,
-  createFamilySchema,
-  createPersonaSchema,
-  createMarriageSchema,
-  createOtherSchema,
-  createLifepartnerSchema,
-  createGurdianPermissionSchema,
+  generalInfoSchema,
+  addressSchema,
+  familySchema,
+  personalSchema,
+  marriageSchema,
+  otherSchema,
+  lifepartnerSchema,
+  gurdianPermissionSchema,
   contactMarriageSchema,
   educationSchema,
 };

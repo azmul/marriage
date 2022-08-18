@@ -18,7 +18,7 @@ async function routes(fastify, options, done) {
     async (request, reply) => {
       try {
         const payload = contactPayload(request.body);
-        const result = await collection.insertOne({ ...payload, created: new Date().toISOString() });
+        const result = await collection.insertOne({ ...payload, createdAt: new Date().toISOString() });
         return result;
       } catch (err) {
         reply.send(err);

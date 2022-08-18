@@ -13,17 +13,18 @@ async function jwtConnector(fastify, options, done) {
     fastify.decorate("authenticate", async function (request, reply, next) {
       try {
         const auth = request.headers.authorization;
+        if(!auth) reply.send("Token not provided")
         const token = auth.split(" ")[1];
         fastify.jwt.verify(token, (err, decoded) => {
           if (err) fastify.log.error(err);
           request.user = decoded;
         });
       } catch (err) {
-        fastify.log.err(err);
+        fastify.log.error(err);
       }
     });
   } catch (err) {
-    fastify.log.err(err);
+    fastify.log.error(err);
   }
 }
 

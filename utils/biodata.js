@@ -112,26 +112,26 @@ export const educationPayload = (data) => {
     ssc: { 
       isSSC: data.isSSC,
       noSscClass: data.noSscClass,
-      result: data.result,
-      division: data.division,
-      passingYear: data.passingYear,
+      result: data.sscResult,
+      division: data.sscDivision,
+      passingYear: data.sscPassingYear,
     },
     hsc: { 
       isHSC: data.isHSC,
       noHscClass: data.noHscClass,
-      result: data.result,
-      division: data.division,
-      passingYear: data.passingYear,
+      result: data.hscResult,
+      division: data.hscDivision,
+      passingYear: data.hscPassingYear,
     },
     diploma: { 
-      subject: data.subject,
-      institution: data.institution,
-      passingYear: data.passingYear
+      subject: data.diplomaSubject,
+      institution: data.diplomaInstitution,
+      passingYear: data.diplomaPassingYear
     },
     bachelorDegree: { 
       degreeName: data.degreeName,
-      institution: data.institution,
-      passingYear: data.passingYear
+      institution: data.degreeInstitution,
+      passingYear: data.degreePassingYear
     },
     otherEduction: data.otherEduction
   }
