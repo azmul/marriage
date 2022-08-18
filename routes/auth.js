@@ -34,6 +34,8 @@ async function routes(fastify, options) {
         isDisable: false,
         isPublish: false,
         isMarried: false,
+        created: new Date().toISOString(),
+        updated: new Date().toISOString()
       });
       const token = fastify.jwt.sign({ name, email });
       reply.send({ token });

@@ -33,7 +33,6 @@ async function routes(fastify, options, done) {
     "/candidates",
     { schema: createSchema, preHandler: userCheck },
     async (request, reply) => {
-      // we can use the `request.body` object to get the data sent by the client
       const result = await collection.insertOne({ ...request.body });
       return result;
     }

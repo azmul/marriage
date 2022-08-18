@@ -1,5 +1,5 @@
 import { userCheck } from "../utils/check.js";
-import { createGeneralInfoSchema } from "../schema/biodata.js";
+import { createGeneralInfoSchema, createAddressSchema } from "../schema/biodata.js";
 import { generalInfoPayload } from "../utils/biodata.js";
 
 /**
@@ -21,7 +21,43 @@ async function routes(fastify, options, done) {
     async (request, reply) => {
       try {
         const payload = generalInfoPayload(request.body);
-        await collection.findOneAndUpdate({ email: request.user.email }, { $set: { "generalInfo" : payload } });
+        await collection.findOneAndUpdate({ email: request.user.email }, { $set: { "generalInfo" : payload, updated: new Date().toISOString() } });
+        return await collection.findOne({ email: request.user.email });
+      } catch (err) {
+        reply.send("error");
+      }
+    }
+  );
+
+  fastify.patch(
+    "/biodata/address",
+    {
+      schema: createAddressSchema,
+      onRequest: [fastify.authenticate],
+      preHandler: userCheck,
+    },
+    async (request, reply) => {
+      try {
+        const payload = generalInfoPayload(request.body);
+        await collection.findOneAndUpdate({ email: request.user.email }, { $set: { "address" : payload, updated: new Date().toISOString() } });
+        return await collection.findOne({ email: request.user.email });
+      } catch (err) {
+        reply.send("error");
+      }
+    }
+  );
+
+  fastify.patch(
+    "/biodata/family",
+    {
+      schema: createAddressSchema,
+      onRequest: [fastify.authenticate],
+      preHandler: userCheck,
+    },
+    async (request, reply) => {
+      try {
+        const payload = generalInfoPayload(request.body);
+        await collection.findOneAndUpdate({ email: request.user.email }, { $set: { "family" : payload, updated: new Date().toISOString() } });
         return await collection.findOne({ email: request.user.email });
       } catch (err) {
         reply.send("error");
