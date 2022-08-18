@@ -8,16 +8,37 @@ async function routes(fastify, options) {
   const candidates = fastify.mongo.db.collection("candidates");
 
   fastify.post("/signup", async (request, reply) => {
-    const {name, email} = request.body;
+    const { name, email } = request.body;
+    if (!name && !email) {
+      reply.send("Invalid name and email");
+    }
 
     const result = await candidates.findOne({ email });
     if (!result) {
       const count = await candidates.count();
-      await candidates.insertOne({ ...request.body, id: count + 1, isDelete: false, isDisable: false, isPublish: false });
-      const token = fastify.jwt.sign({ name, email});
+      await candidates.insertOne({
+        socialName: name,
+        email: email,
+        id: count + 1,
+        generalInfo: null,
+        address: null,
+        education: null,
+        family: null,
+        personal: null,
+        marriage: null,
+        other: null,
+        lifePartner: null,
+        gurdian: null,
+        contact: null,
+        isDelete: false,
+        isDisable: false,
+        isPublish: false,
+        isMarried: false,
+      });
+      const token = fastify.jwt.sign({ name, email });
       reply.send({ token });
     }
-    const token = fastify.jwt.sign({ name, email});
+    const token = fastify.jwt.sign({ name, email });
     reply.send({ token });
   });
 

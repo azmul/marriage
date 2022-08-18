@@ -10,14 +10,18 @@ async function jwtConnector(fastify, options, done) {
       secret: process.env.SECRET_KEY,
     });
 
-    fastify.decorate("authenticate", async function (request, reply) {
+    fastify.decorate("authenticate", async function (request, reply, next) {
       try {
-        await request.jwtVerify();
+        const auth = request.headers.authorization;
+        const token = auth.split(" ")[1];
+        fastify.jwt.verify(token, (err, decoded) => {
+          if (err) fastify.log.error(err);
+          request.user = decoded;
+        });
       } catch (err) {
-        reply.send(err);
+        fastify.log.err(err);
       }
     });
-    done();
   } catch (err) {
     fastify.log.err(err);
   }

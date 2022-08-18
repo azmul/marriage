@@ -11,7 +11,7 @@ async function dbConnector (fastify, options, done) {
     fastify.register(fastifyMongo, {
       url
     });
-    fastify.log.info("DB Connected");
+    fastify.log.info(`DB Connected ${url}`);
     done();
   } catch (err) {
     fastify.log.info("DB Not Connected")
