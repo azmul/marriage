@@ -7,8 +7,8 @@ import { contactPayload } from "../utils/contact.js";
  * @param {Object} options plugin options
  */
 
-async function routes(fastify, options) {
-  const contact = fastify.mongo.db.collection("contact");
+async function routes(fastify, options, done) {
+  const collection = fastify.mongo.db.collection("contact");
 
   fastify.post(
     "/contact",
@@ -18,13 +18,21 @@ async function routes(fastify, options) {
     async (request, reply) => {
       try {
         const payload = contactPayload(request.body);
-        const result = await contact.insertOne({ ...payload });
+        const result = await collection.insertOne({ ...payload });
         return result;
       } catch (err) {
         reply.send(err);
       }
     }
   );
+
+  fastify.get("/contact", async (request, reply) => {
+    const result = await collection.find().toArray();
+    if (result.length === 0) {
+      throw new Error("No documents found");
+    }
+    return result;
+  });
 
   done();
 }

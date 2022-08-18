@@ -5,7 +5,7 @@
  */
 
 async function routes(fastify, options) {
-  const candidates = fastify.mongo.db.collection("candidates");
+  const collection = fastify.mongo.db.collection("candidates");
 
   fastify.post("/signup", async (request, reply) => {
     const { name, email } = request.body;
@@ -13,10 +13,10 @@ async function routes(fastify, options) {
       reply.send("Invalid name and email");
     }
 
-    const result = await candidates.findOne({ email });
+    const result = await collection.findOne({ email });
     if (!result) {
-      const count = await candidates.count();
-      await candidates.insertOne({
+      const count = await collection.count();
+      await collection.insertOne({
         socialName: name,
         email: email,
         id: count + 1,
