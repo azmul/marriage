@@ -9,6 +9,7 @@ async function dbConnector (fastify, options, done) {
   const url = process.env.NODE_ENV === "production" ? process.env.MONGO_URL : process.env.MONGO_LOCAL_URL;
   try {
     fastify.register(fastifyMongo, {
+      forceClose: true,
       url
     });
     fastify.log.info(`DB Connected ${url}`);

@@ -20,6 +20,7 @@ async function routes(fastify, options, done) {
     const {
       page = 1,
       size = DEFAULT_DATA_PER_PAGE,
+      age,
       createdAt,
       endAt,
       gender,
@@ -27,6 +28,16 @@ async function routes(fastify, options, done) {
       district,
     } = request.query;
     const skips = Number(size) * (Number(page) - 1);
+
+    const projectionFields = {
+      createdAt: 0,
+      updatedAt: 0,
+      socialName: 0,
+      isDelete: 0,
+      isDisable: 0,
+      isMarried: 0,
+      isPublish: 0,
+    };
 
     const query = {};
     if (createdAt && endAt) {
@@ -38,6 +49,13 @@ async function routes(fastify, options, done) {
       }
     }
 
+    if (age) {
+      query["generalInfo.age"] = {
+        $gte: 6,
+        $lt: Number(age) + 1,
+      };
+    }
+
     if (gender) query["generalInfo.gender"] = Number(gender);
     if (district) query["generalInfo.parmanentDistrict"] = district;
     if (maritalStatus)
@@ -45,11 +63,14 @@ async function routes(fastify, options, done) {
 
     try {
       const result = await candidates
-        .find(query)
+        .find(query, {
+          projection: { ...projectionFields }
+        })
         .sort({ createdAt: -1 })
         .skip(skips)
         .limit(Number(size))
         .toArray();
+        
       const total = await candidates.find(query).count();
 
       if (result.length === 0) {
@@ -91,7 +112,7 @@ async function routes(fastify, options, done) {
     async (request, reply) => {
       try {
         const payload = candidatesRequestPayload(request.body);
-        await candidateRequest.insertOne({...payload});
+        await candidateRequest.insertOne({ ...payload });
         return payload;
       } catch (err) {
         reply.send("error");
