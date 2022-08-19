@@ -1,5 +1,7 @@
 import { userCheck } from "../utils/check.js";
 import { DEFAULT_DATA_PER_PAGE } from "../constant/pagination.js";
+import { contactRequestSchema } from "../schema/candidates.js";
+import { candidatesRequestPayload } from "../utils/candidates.js";
 /**
  * A plugin that provide encapsulated routes
  * @param {FastifyInstance} fastify encapsulated fastify instance
@@ -7,7 +9,8 @@ import { DEFAULT_DATA_PER_PAGE } from "../constant/pagination.js";
  */
 
 async function routes(fastify, options, done) {
-  const collection = fastify.mongo.db.collection("candidates");
+  const candidates = fastify.mongo.db.collection("candidates");
+  const candidateRequest = fastify.mongo.db.collection("candidateRequest");
 
   fastify.get("/", { preHandler: userCheck }, async (request, reply) => {
     return { hello: "world" };
@@ -21,7 +24,7 @@ async function routes(fastify, options, done) {
       endAt,
       gender,
       maritalStatus,
-      district
+      district,
     } = request.query;
     const skips = Number(size) * (Number(page) - 1);
 
@@ -37,16 +40,17 @@ async function routes(fastify, options, done) {
 
     if (gender) query["generalInfo.gender"] = Number(gender);
     if (district) query["generalInfo.parmanentDistrict"] = district;
-    if (maritalStatus) query["generalInfo.maritalStatus"] = Number(maritalStatus);
+    if (maritalStatus)
+      query["generalInfo.maritalStatus"] = Number(maritalStatus);
 
     try {
-      const result = await collection
+      const result = await candidates
         .find(query)
         .sort({ createdAt: -1 })
         .skip(skips)
         .limit(Number(size))
         .toArray();
-      const total = await collection.find(query).count();
+      const total = await candidates.find(query).count();
 
       if (result.length === 0) {
         throw new Error("No documents found");
@@ -67,16 +71,33 @@ async function routes(fastify, options, done) {
 
   fastify.get("/candidates/:id", async (request, reply) => {
     try {
-      const result = await collection.findOne({ id: Number(request.params.id) });
+      const result = await candidates.findOne({
+        id: Number(request.params.id),
+      });
       if (!result) {
         throw new Error("Invalid Id");
       }
       return result;
     } catch (err) {
-      throw new Error(err)
+      throw new Error(err);
     }
-    
   });
+
+  fastify.post(
+    "/candidates/request",
+    {
+      schema: contactRequestSchema,
+    },
+    async (request, reply) => {
+      try {
+        const payload = candidatesRequestPayload(request.body);
+        await candidateRequest.insertOne({...payload});
+        return payload;
+      } catch (err) {
+        reply.send("error");
+      }
+    }
+  );
 
   done();
 }

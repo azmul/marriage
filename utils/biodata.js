@@ -6,6 +6,7 @@ export const generalInfoPayload = (data) => {
     parmanentDistrict: data.parmanentDistrict,
     presentDistrict: data.presentDistrict,
     birthYear: data.birthYear,
+    age: data.age,
     color: data.color,
     height: data.height,
     weight: data.weight,
