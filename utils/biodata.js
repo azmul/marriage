@@ -34,6 +34,7 @@ export const familyPayload = (data) => {
     motherOccupation: data.motherOccupation,
     sisters: data.sisters,
     brothers: data.brothers,
+    brotherSisterOccupation: data.brotherSisterOccupation,
     uncleOccupation: data.uncleOccupation,
     socialStatus: data.socialStatus
   }

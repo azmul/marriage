@@ -40,7 +40,8 @@ const familyBodyJsonSchema = S.object()
   .prop("motherOccupation", S.string().required())
   .prop("sisters", S.number().required())
   .prop("brothers", S.number().required())
-  .prop("uncleOccupation", S.string().required())
+  .prop("uncleOccupation", S.string())
+  .prop("brotherSisterOccupation", S.string().required())
   .prop("socialStatus", S.string().required());
 
 const familySchema = {

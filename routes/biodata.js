@@ -85,7 +85,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { address: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -106,7 +111,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { education: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -127,7 +137,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { family: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields }
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -148,7 +163,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { personal: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -169,7 +189,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { marriage: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -190,7 +215,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { other: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -213,7 +243,12 @@ async function routes(fastify, options, done) {
             $set: { lifePartner: payload, updatedAt: new Date().toISOString() },
           }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -234,7 +269,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { gurdian: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -255,7 +295,12 @@ async function routes(fastify, options, done) {
           { email: request.user.email },
           { $set: { contact: payload, updatedAt: new Date().toISOString() } }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
