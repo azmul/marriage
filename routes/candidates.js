@@ -25,7 +25,7 @@ async function routes(fastify, options, done) {
       endAt,
       gender,
       maritalStatus,
-      district,
+      parmanentDistrict,
     } = request.query;
     const skips = Number(size) * (Number(page) - 1);
 
@@ -37,6 +37,7 @@ async function routes(fastify, options, done) {
       isDisable: 0,
       isMarried: 0,
       isPublish: 0,
+      "generalInfo.name": 0
     };
 
     const query = {};
@@ -57,7 +58,7 @@ async function routes(fastify, options, done) {
     }
 
     if (gender) query["generalInfo.gender"] = Number(gender);
-    if (district) query["generalInfo.parmanentDistrict"] = district;
+    if (parmanentDistrict) query["generalInfo.parmanentDistrict"] = Number(parmanentDistrict);
     if (maritalStatus)
       query["generalInfo.maritalStatus"] = Number(maritalStatus);
 
@@ -66,7 +67,7 @@ async function routes(fastify, options, done) {
         .find(query, {
           projection: { ...projectionFields }
         })
-        .sort({ createdAt: -1 })
+        .sort({ id: 1 })
         .skip(skips)
         .limit(Number(size))
         .toArray();

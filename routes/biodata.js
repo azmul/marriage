@@ -33,6 +33,16 @@ import {
 async function routes(fastify, options, done) {
   const collection = fastify.mongo.db.collection("candidates");
 
+  const projectionFields = {
+    createdAt: 0,
+    updatedAt: 0,
+    socialName: 0,
+    isDelete: 0,
+    isDisable: 0,
+    isMarried: 0,
+    isPublish: 0,
+  };
+
   fastify.patch(
     "/biodata/generalinfo",
     {
@@ -45,9 +55,16 @@ async function routes(fastify, options, done) {
         const payload = generalInfoPayload(request.body);
         await collection.findOneAndUpdate(
           { email: request.user.email },
-          { $set: { generalInfo: payload, updatedAt: new Date().toISOString() } }
+          {
+            $set: { generalInfo: payload, updatedAt: new Date().toISOString() },
+          }
         );
-        return await collection.findOne({ email: request.user.email });
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
       } catch (err) {
         reply.send("error");
       }
@@ -192,7 +209,9 @@ async function routes(fastify, options, done) {
         const payload = lifePartnerPayload(request.body);
         await collection.findOneAndUpdate(
           { email: request.user.email },
-          { $set: { lifePartner: payload, updatedAt: new Date().toISOString() } }
+          {
+            $set: { lifePartner: payload, updatedAt: new Date().toISOString() },
+          }
         );
         return await collection.findOne({ email: request.user.email });
       } catch (err) {

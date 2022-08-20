@@ -37,11 +37,12 @@ async function routes(fastify, options) {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       });
-      const token = fastify.jwt.sign({ name, email });
-      reply.send({ token });
+      const candidate = await collection.findOne({ email });
+      const token = fastify.jwt.sign({ name: candidate.name, email: candidate.email, id: candidate.id });
+      reply.send({ token: token, email: candidate.email, id: candidate.id });
     }
-    const token = fastify.jwt.sign({ name, email });
-    reply.send({ token });
+    const token = fastify.jwt.sign({ name: result.name, email: result.email, id: result.id });
+    reply.send({ token: token, email: result.email, id: result.id });
   });
 
   fastify.get(
