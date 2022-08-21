@@ -78,7 +78,7 @@ async function routes(fastify, options, done) {
         throw new Error("No documents found");
       }
 
-      reply.status(200).send({
+      reply.status(201).send({
         data: result,
         pagination: {
           total,
@@ -114,9 +114,9 @@ async function routes(fastify, options, done) {
       try {
         const payload = candidatesRequestPayload(request.body);
         await candidateRequest.insertOne({ ...payload });
-        return payload;
-      } catch (err) {
-        reply.send("error");
+        reply.status(201).send(payload);
+      } catch (error) {
+        reply.status(500).send(error);
       }
     }
   );

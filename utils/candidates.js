@@ -5,9 +5,13 @@ export const candidatesRequestPayload = (data) => {
     phone: data.phone,
     biodataTotal: data.biodataTotal,
     price: data.price,
-    biodata: data.biodata,
+    biodatas: data.biodatas,
     paymentMethod: data.paymentMethod,
     paymentNumber: data.paymentNumber,
-    transactionId: data.transactionId
-  }
-}
+    transactionId: data.transactionId,
+    isProcess: false,
+    comment: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+};
