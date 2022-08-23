@@ -8,7 +8,7 @@ import {
   marriageSchema,
   otherSchema,
   lifepartnerSchema,
-  gurdianPermissionSchema,
+  authoritySchema,
   contactMarriageSchema,
 } from "../schema/biodata.js";
 import {
@@ -19,7 +19,7 @@ import {
   personalPayload,
   contactPayload,
   marriagePayload,
-  gurdianPermissionPayload,
+  authorityPayload,
   otherPayload,
   lifePartnerPayload,
 } from "../utils/biodata.js";
@@ -256,18 +256,18 @@ async function routes(fastify, options, done) {
   );
 
   fastify.patch(
-    "/biodata/gurdian",
+    "/biodata/authority",
     {
-      schema: gurdianPermissionSchema,
+      schema: authoritySchema,
       onRequest: [fastify.authenticate],
       preHandler: userCheck,
     },
     async (request, reply) => {
       try {
-        const payload = gurdianPermissionPayload(request.body);
+        const payload = authorityPayload(request.body);
         await collection.findOneAndUpdate(
           { email: request.user.email },
-          { $set: { gurdian: payload, updatedAt: new Date().toISOString() } }
+          { $set: { authority: payload, updatedAt: new Date().toISOString() } }
         );
         return await collection.findOne(
           { email: request.user.email },

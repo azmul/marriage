@@ -82,8 +82,7 @@ const marriageSchema = {
 
 /** Other Information */
 const otherBodyJsonSchema = S.object()
-  .prop("gurdianAggree", S.string().required())
-  .prop("opinion", S.string().required());
+  .prop("otherInfo", S.string().required());
 
 const otherSchema = {
   body: otherBodyJsonSchema,
@@ -94,10 +93,10 @@ const otherSchema = {
 const lifePartnerBodyJsonSchema = S.object()
   .prop("age", S.string().required())
   .prop("color", S.string().required())
-  .prop("minimuHeight", S.string().required())
+  .prop("minimumHeight", S.string().required())
   .prop("minimumEducation", S.string().required())
-  .prop("district", S.string().required())
-  .prop("maritalStatus", S.string().required())
+  .prop("district", S.number().required())
+  .prop("maritalStatus", S.number().required())
   .prop("occupation", S.string().required())
   .prop("economicalStatus", S.string().required())
   .prop("familyStatus", S.string().required())
@@ -109,13 +108,13 @@ const lifepartnerSchema = {
 
 /** Gurdian Permission */
 
-const gurdianPermissionJsonSchema = S.object()
+const authorityJsonSchema = S.object()
   .prop("gurdianPermission", S.boolean().required())
   .prop("trueInformation", S.boolean().required())
   .prop("informationResponsibility", S.boolean().required());
 
-const gurdianPermissionSchema = {
-  body: gurdianPermissionJsonSchema,
+const authoritySchema = {
+  body: authorityJsonSchema,
 };
 
 /** Contact Information */
@@ -134,7 +133,7 @@ const educationBodyJsonSchema = S.object()
   .prop("eductionMedium", S.number().required())
   .prop("otherEduction", S.string())
   .prop("hafez", S.boolean())
-  .prop("doaraHadith", S.string())
+  .prop("doaraHadith", S.boolean())
   .prop("maximumEduction", S.string())
   .prop("isSSC", S.boolean())
   .prop("noSscClass", S.number())
@@ -165,7 +164,7 @@ export {
   marriageSchema,
   otherSchema,
   lifepartnerSchema,
-  gurdianPermissionSchema,
+  authoritySchema,
   contactMarriageSchema,
   educationSchema,
 };

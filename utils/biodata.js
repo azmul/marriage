@@ -77,7 +77,7 @@ export const lifePartnerPayload = (data) => {
   return {
     age: data.age,
     color: data.color,
-    minimuHeight: data.minimuHeight,
+    minimumHeight: data.minimumHeight,
     minimumEducation: data.minimumEducation,
     district: data.district,
     maritalStatus: data.maritalStatus,
@@ -88,7 +88,7 @@ export const lifePartnerPayload = (data) => {
   }
 }
 
-export const gurdianPermissionPayload = (data) => {
+export const authorityPayload = (data) => {
   return {
     gurdianPermission: data.gurdianPermission,
     trueInformation: data.trueInformation,

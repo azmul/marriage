@@ -28,7 +28,7 @@ async function routes(fastify, options) {
         marriage: null,
         other: null,
         lifePartner: null,
-        gurdian: null,
+        authority: null,
         contact: null,
         isDelete: false,
         isDisable: false,
