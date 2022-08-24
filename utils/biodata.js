@@ -14,17 +14,17 @@ export const generalInfoPayload = (data) => {
     weight: data.weight,
     bloodGroup: data.bloodGroup,
     occupation: data.occupation,
-    monthlyIncome: data.monthlyIncome
-  }
-}
+    monthlyIncome: data.monthlyIncome,
+  };
+};
 
 export const addressPayload = (data) => {
   return {
     permanentAddress: data.permanentAddress,
     presentAddress: data.presentAddress,
-    childhoodPlace: data.childhoodPlace
-  }
-}
+    childhoodPlace: data.childhoodPlace,
+  };
+};
 
 export const familyPayload = (data) => {
   return {
@@ -36,9 +36,9 @@ export const familyPayload = (data) => {
     brothers: data.brothers,
     brotherSisterOccupation: data.brotherSisterOccupation,
     uncleOccupation: data.uncleOccupation,
-    socialStatus: data.socialStatus
-  }
-}
+    socialStatus: data.socialStatus,
+  };
+};
 
 export const personalPayload = (data) => {
   return {
@@ -56,22 +56,22 @@ export const personalPayload = (data) => {
     islamicBook: data.islamicBook,
     alemsName: data.alemsName,
     quality: data.quality,
-    yourslef: data.yourslef
-  }
-}
+    yourslef: data.yourslef,
+  };
+};
 
 export const marriagePayload = (data) => {
   return {
     gurdianAggree: data.gurdianAggree,
-    opinion: data.opinion
-  }
-}
+    opinion: data.opinion,
+  };
+};
 
 export const otherPayload = (data) => {
   return {
-    otherInfo: data.otherInfo
-  }
-}
+    otherInfo: data.otherInfo,
+  };
+};
 
 export const lifePartnerPayload = (data) => {
   return {
@@ -84,59 +84,54 @@ export const lifePartnerPayload = (data) => {
     occupation: data.occupation,
     economicalStatus: data.economicalStatus,
     familyStatus: data.familyStatus,
-    quality: data.quality
-  }
-}
+    quality: data.quality,
+  };
+};
 
 export const authorityPayload = (data) => {
   return {
     gurdianPermission: data.gurdianPermission,
     trueInformation: data.trueInformation,
-    informationResponsibility: data.informationResponsibility
-  }
-}
+    informationResponsibility: data.informationResponsibility,
+  };
+};
 
 export const contactPayload = (data) => {
   return {
     gurdianContactNumber: data.gurdianContactNumber,
     relation: data.relation,
     email: data.email,
-    contactNumber: data.contactNumber
-  }
-}
+    contactNumber: data.contactNumber,
+  };
+};
 
 export const educationPayload = (data) => {
   return {
     eductionMedium: data.eductionMedium,
-    madrasa: { 
-      hafez: data.hafez,
-      doaraHadith: data.doaraHadith,
-      maximumEduction: data.maximumEduction,
-    },
-    ssc: { 
-      isSSC: data.isSSC,
-      noSscClass: data.noSscClass,
-      result: data.sscResult,
-      division: data.sscDivision,
-      passingYear: data.sscPassingYear,
-    },
-    hsc: { 
-      isHSC: data.isHSC,
-      noHscClass: data.noHscClass,
-      result: data.hscResult,
-      division: data.hscDivision,
-      passingYear: data.hscPassingYear,
-    },
-    diploma: { 
-      subject: data.diplomaSubject,
-      institution: data.diplomaInstitution,
-      passingYear: data.diplomaPassingYear
-    },
-    bachelorDegree: { 
-      degreeName: data.degreeName,
-      institution: data.degreeInstitution,
-      passingYear: data.degreePassingYear
-    },
-    otherEduction: data.otherEduction
-  }
-}
+    otherEduction: data.otherEduction,
+    maximumEduction: data.maximumEduction,
+    hafez: data.hafez,
+    doaraHadith: data.doaraHadith,
+    doaraHadithPassingYear: data.doaraHadithPassingYear,
+    doaraHadithNatija: data.doaraHadithNatija,
+    doaraHadithTakhasuk: data.doaraHadithTakhasuk,
+    doaraHadithRunningYear: data.doaraHadithRunningYear,
+    isSSC: data.isSSC,
+    minimumSscClass: data.minimumSscClass,
+    sscResult: data.sscResult,
+    sscDivision: data.sscDivision,
+    sscPassingYear: data.sscPassingYear,
+    isHSC: data.isHSC,
+    minimumHscClass: data.minimumHscClass,
+    hscResult: data.hscResult,
+    hscDivision: data.hscDivision,
+    hscPassingYear: data.hscPassingYear,
+    diplomaSubject: data.diplomaSubject,
+    diplomaInstitution: data.diplomaInstitution,
+    diplomaPassingYear: data.diplomaPassingYear,
+    isDegree: data.isDegree,
+    degreeName: data.degreeName,
+    degreeInstitution: data.degreeInstitution,
+    degreePassingYear: data.degreePassingYear,
+  };
+};
