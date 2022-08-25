@@ -42,7 +42,7 @@ export const familyPayload = (data) => {
 
 export const personalPayload = (data) => {
   return {
-    namaz: data.namz,
+    namaz: data.namaz,
     regularNamazTime: data.regularNamazTime,
     mahram: data.mahram,
     quran: data.quran,

@@ -37,7 +37,8 @@ async function routes(fastify, options, done) {
       isDisable: 0,
       isMarried: 0,
       isPublish: 0,
-      "generalInfo.name": 0
+      "generalInfo.name": 0,
+      contact: 0,
     };
 
     const query = {};
