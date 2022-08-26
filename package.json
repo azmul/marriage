@@ -28,6 +28,7 @@
     "fastify-plugin": "^4.2.0",
     "fluent-json-schema": "^3.1.0",
     "make-promises-safe": "^5.1.0",
+    "nodemailer": "^6.7.8",
     "path": "^0.12.7",
     "url": "^0.11.0"
   }
