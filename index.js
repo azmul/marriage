@@ -32,6 +32,7 @@ app
         MONGO_LOCAL_URL: { type: "string" },
         MONGO_URL: { type: "string" },
         SECRET_KEY: { type: "string" },
+        FE_URL: { type: "string" },
       },
     },
     data: process.env,

@@ -96,8 +96,8 @@ async function routes(fastify, options) {
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: "kureghorbdteam@gmail.com", // generated ethereal user
-        pass: "uhnetxzfzqwybtyt", // generated ethereal password
+        user: process.env.SIGN_UP_AUTH_USER, // generated ethereal user
+        pass: process.env.SIGN_UP_AUTH_PASSWORD, // generated ethereal password
       },
     });
 
@@ -131,7 +131,7 @@ async function routes(fastify, options) {
       to: email, // list of receivers
       subject: "SignUp", // Subject line
       text: "SignUp Process", // plain text body
-      html: `<b><a href="http://localhost:8080/user/verify?active_id=${
+      html: `<b><a href="${process.env.BE_URL}/user/verify?active_id=${
         count + 1
       }">আপনার একাউন্ট একটিভ করতে এখানে ক্লিক করুন.</a></b>`, // html body
     });
@@ -153,7 +153,7 @@ async function routes(fastify, options) {
         }
       );
     }
-    reply.redirect("http://localhost:3000/login/");
+    reply.redirect(`${process.env.FE_URL}/login/`);
   });
 
   fastify.get(
