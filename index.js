@@ -8,17 +8,17 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import fastifyEnv from "@fastify/env";
 
-const app = Fastify({
+const fastify = Fastify({
   logger: true,
 });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.register(cors);
-app.register(helmet);
+fastify.register(cors);
+fastify.register(helmet);
 
-app
+fastify
   .register(fastifyEnv, {
     confKey: "config",
     dotenv: true,
@@ -41,13 +41,13 @@ app
     if (err) console.error(err);
   });
 
-app.register(dbConnector);
+fastify.register(dbConnector);
 
-app.register(autoLoad, {
+fastify.register(autoLoad, {
   dir: join(__dirname, "plugins"),
 });
 
-app.register(autoLoad, {
+fastify.register(autoLoad, {
   dir: join(__dirname, "routes"),
 });
 
@@ -59,9 +59,9 @@ const host = process.env.HOST || "0.0.0.0";
 
 const start = async () => {
   try {
-    app.listen({ port, host });
+    fastify.listen({ port, host });
   } catch (err) {
-    app.log.error(err);
+    fastify.log.error(err);
     process.exit(1);
   }
 };

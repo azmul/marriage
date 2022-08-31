@@ -21,8 +21,6 @@ async function routes(fastify, options, done) {
       page = 1,
       size = DEFAULT_DATA_PER_PAGE,
       age,
-      createdAt,
-      endAt,
       gender,
       maritalStatus,
       parmanentDistrict,
@@ -41,16 +39,12 @@ async function routes(fastify, options, done) {
       contact: 0,
     };
 
-    const query = {};
-    if (createdAt && endAt) {
-      if (start && end) {
-        query.createdAt = {
-          $gte: new Date(createdAt),
-          $lt: new Date(endAt),
-        };
-      }
-    }
-
+    const query = {
+      isVerify: true,
+      isPublish: true,
+      isApproved: true,
+    };
+    
     if (age) {
       query["generalInfo.age"] = {
         $gte: 6,
@@ -59,27 +53,24 @@ async function routes(fastify, options, done) {
     }
 
     if (gender) query["generalInfo.gender"] = Number(gender);
-    if (parmanentDistrict) query["generalInfo.parmanentDistrict"] = Number(parmanentDistrict);
+    if (parmanentDistrict)
+      query["generalInfo.parmanentDistrict"] = Number(parmanentDistrict);
     if (maritalStatus)
       query["generalInfo.maritalStatus"] = Number(maritalStatus);
 
     try {
       const result = await candidates
         .find(query, {
-          projection: { ...projectionFields }
+          projection: { ...projectionFields },
         })
         .sort({ id: 1 })
         .skip(skips)
         .limit(Number(size))
         .toArray();
-        
+
       const total = await candidates.find(query).count();
 
-      if (result.length === 0) {
-        throw new Error("No documents found");
-      }
-
-      reply.status(201).send({
+      reply.status(200).send({
         data: result,
         pagination: {
           total,
@@ -91,6 +82,56 @@ async function routes(fastify, options, done) {
       reply.status(500).send(error);
     }
   });
+
+  fastify.get(
+    "/admin/candidates",
+    {
+      onRequest: [fastify.adminAuthenticate],
+    },
+    async (request, reply) => {
+      const {
+        page = 1,
+        size = DEFAULT_DATA_PER_PAGE,
+        startDate,
+        endDate,
+      } = request.query;
+      const skips = Number(size) * (Number(page) - 1);
+
+      const query = {
+        isVerify: true,
+        isPublish: true,
+      };
+
+      if (startDate && endDate) {
+        query.createdAt = {
+          $gte: new Date(startDate).toISOString(),
+          $lt: new Date(endDate).toISOString(),
+        };
+      }
+
+      try {
+        const result = await candidates
+          .find(query)
+          .sort({ createdAt: -1 })
+          .skip(skips)
+          .limit(Number(size))
+          .toArray();
+
+        const total = await candidates.find(query).count();
+
+        reply.status(200).send({
+          data: result,
+          pagination: {
+            total,
+            size: Number(size),
+            page: Number(page),
+          },
+        });
+      } catch (error) {
+        reply.status(500).send(error);
+      }
+    }
+  );
 
   fastify.get("/candidates/:id", async (request, reply) => {
     try {
@@ -114,10 +155,48 @@ async function routes(fastify, options, done) {
     async (request, reply) => {
       try {
         const payload = candidatesRequestPayload(request.body);
-        await candidateRequest.insertOne({ ...payload });
+        const { biodatas } = payload;
+        const ids = biodatas && biodatas.map((biodata) => biodata.id);
+        const contacts = await candidates
+          .find(
+            { id: { $in: ids } },
+            { projection: { id: 1, contact: 1, _id: 0 } }
+          )
+          .toArray();
+        await candidateRequest.insertOne({ ...payload, contacts });
         reply.status(201).send(payload);
       } catch (error) {
         reply.status(500).send(error);
+      }
+    }
+  );
+
+  fastify.patch(
+    "/admin/candidates/:id",
+    {
+      onRequest: [fastify.adminAuthenticate],
+    },
+    async (request, reply) => {
+      try {
+        const id = fastify.mongo.ObjectId(request.params.id);
+        const { isDelete, isDisable, isMarried, isApproved, comment } =
+          request.body;
+        await candidates.findOneAndUpdate(
+          { _id: id },
+          {
+            $set: {
+              isDelete: isDelete,
+              isDisable: isDisable,
+              isMarried: isMarried,
+              isApproved: isApproved,
+              comment: comment,
+              updatedAt: new Date().toISOString(),
+            },
+          }
+        );
+        return request.body;
+      } catch (err) {
+        reply.send(err);
       }
     }
   );

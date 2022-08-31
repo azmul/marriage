@@ -37,6 +37,8 @@ async function routes(fastify, options) {
         isDisable: false,
         isPublish: false,
         isMarried: false,
+        isApproved: false,
+        comment: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
@@ -72,7 +74,7 @@ async function routes(fastify, options) {
 
     const result = await collection.findOne({ email });
     if (!result) {
-      reply.status(400).send({statusCode: 400});
+      reply.status(400).send({ statusCode: 400 });
     }
     const token = fastify.jwt.sign({
       email: result.email,
@@ -121,6 +123,8 @@ async function routes(fastify, options) {
       isDisable: false,
       isPublish: false,
       isMarried: false,
+      isApproved: false,
+      comment: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -153,7 +157,7 @@ async function routes(fastify, options) {
         }
       );
     }
-    reply.redirect(`${process.env.FE_URL}/login/`);
+    reply.redirect(`${process.env.FE_URL}/login`);
   });
 
   fastify.get(

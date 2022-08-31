@@ -23,6 +23,18 @@ async function jwtConnector(fastify, options, done) {
         fastify.log.error(err);
       }
     });
+    fastify.decorate("adminAuthenticate", async function (request, reply, next) {
+      try {
+        const token = request.headers["x-auth-token"];
+        if(!token) reply.send("Token not provided")
+        fastify.jwt.verify(token, (err, decoded) => {
+          if (err) fastify.log.error(err);
+          request.user = decoded;
+        });
+      } catch (err) {
+        fastify.log.error(err);
+      }
+    });
   } catch (err) {
     fastify.log.error(err);
   }
