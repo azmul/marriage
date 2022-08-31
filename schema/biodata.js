@@ -9,13 +9,14 @@ const generalInfoBodyJsonSchema = S.object()
   .prop("parmanentDivision", S.number().required())
   .prop("presentDistrict", S.number().required())
   .prop("presentDivision", S.number().required())
-  .prop("birthYear", S.string().required())
+  .prop("birthYear", S.number().required())
   .prop("age", S.number().required())
   .prop("color", S.number().required())
-  .prop("height", S.string().required())
+  .prop("height", S.number().required())
   .prop("weight", S.number().required())
   .prop("bloodGroup", S.number().required())
-  .prop("occupation", S.string().required())
+  .prop("occupation", S.number().required())
+  .prop("occupationDetails", S.string().required())
   .prop("monthlyIncome", S.string());
 
 const generalInfoSchema = {

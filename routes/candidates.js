@@ -22,6 +22,10 @@ async function routes(fastify, options, done) {
       size = DEFAULT_DATA_PER_PAGE,
       age,
       gender,
+      color,
+      height,
+      weight,
+      occupation,
       maritalStatus,
       parmanentDistrict,
     } = request.query;
@@ -52,7 +56,23 @@ async function routes(fastify, options, done) {
       };
     }
 
+    if (height) {
+      query["generalInfo.height"] = {
+        $gte: 3.9,
+        $lt: Number(height) + 1,
+      };
+    }
+
+    if (weight) {
+      query["generalInfo.weight"] = {
+        $gte: 30,
+        $lt: Number(weight) + 1,
+      };
+    }
+
     if (gender) query["generalInfo.gender"] = Number(gender);
+    if (color) query["generalInfo.color"] = Number(color);
+    if (occupation) query["generalInfo.occupation"] = Number(occupation);
     if (parmanentDistrict)
       query["generalInfo.parmanentDistrict"] = Number(parmanentDistrict);
     if (maritalStatus)

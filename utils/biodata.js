@@ -14,6 +14,7 @@ export const generalInfoPayload = (data) => {
     weight: data.weight,
     bloodGroup: data.bloodGroup,
     occupation: data.occupation,
+    occupationDetails: data.occupationDetails,
     monthlyIncome: data.monthlyIncome,
   };
 };

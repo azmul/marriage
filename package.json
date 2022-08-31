@@ -17,6 +17,7 @@
   "author": "azmul",
   "license": "ISC",
   "dependencies": {
+    "@0devco/bd-phone-validator": "^2.0.0",
     "@fastify/autoload": "^5.2.0",
     "@fastify/cors": "^8.1.0",
     "@fastify/env": "^4.1.0",

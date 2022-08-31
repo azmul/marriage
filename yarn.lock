@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@0devco/bd-phone-validator@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@0devco/bd-phone-validator/-/bd-phone-validator-2.0.0.tgz#ce9450ce893541d233524f08c8f8cea2a6b3b54d"
+  integrity sha512-7DenYfC6/gJdsQi7wCtwYcoZ16Gtygyje5N6hx1shpvwT7PC+aCiGuUvAS9AxlhsbtvZoJlE6C6cXXNoYWwahg==
+
 "@fastify/ajv-compiler@^3.1.1":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@fastify/ajv-compiler/-/ajv-compiler-3.1.2.tgz#9b3c4ae0f5feeb2a90ee797cff6dc26e1831795b"

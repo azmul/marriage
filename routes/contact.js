@@ -1,5 +1,6 @@
 import { createContactSchema } from "../schema/contact.js";
 import { contactPayload } from "../utils/contact.js";
+import { phoneNumberValidator } from "../utils/phValidator.js";
 
 /**
  * A plugin that provide encapsulated routes
@@ -18,6 +19,9 @@ async function routes(fastify, options, next) {
     async (request, reply) => {
       try {
         const payload = contactPayload(request.body);
+        if(!phoneNumberValidator(payload.phone)) {
+          reply.status(400).send({ status: 400, message: "Phone not valid"});
+        }
         const count = await collection.count();
         const result = await collection.insertOne({
           ...payload,
@@ -42,8 +46,8 @@ async function routes(fastify, options, next) {
 
     if (startDate && endDate) {
       query.createdAt = {
-        $gte:  new Date(startDate).toISOString(),
-        $lt:  new Date(endDate).toISOString(),
+        $gte: new Date(startDate).toISOString(),
+        $lt: new Date(endDate).toISOString(),
       };
     }
 
