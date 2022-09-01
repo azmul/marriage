@@ -84,7 +84,6 @@ async function routes(fastify, options) {
 
       const validPassword = await bcrypt.compare(password, admin.password);
 
-      console.log(validPassword);
       if (!validPassword)
         return res
           .status(400)

@@ -13,10 +13,11 @@ async function routes(fastify, options, done) {
   const candidateRequest = fastify.mongo.db.collection("candidateRequest");
 
   fastify.get("/", { preHandler: userCheck }, async (request, reply) => {
-    return { hello: "world" };
+    return { message: "Hello Sunnah Kobul dot com" };
   });
 
   fastify.get("/candidates", async (request, reply) => {
+    try {
     const {
       page = 1,
       size = DEFAULT_DATA_PER_PAGE,
@@ -78,7 +79,7 @@ async function routes(fastify, options, done) {
     if (maritalStatus)
       query["generalInfo.maritalStatus"] = Number(maritalStatus);
 
-    try {
+    
       const result = await candidates
         .find(query, {
           projection: { ...projectionFields },
