@@ -352,13 +352,11 @@ async function routes(fastify, options, done) {
             }
           );
         } else {
-          reply
-            .status(400)
-            .send({
-              statusCode: 400,
-              message:
-                "আপনার বায়োডাটা পাবলিশ হবেনা। আপনি সব তথ্য দিয়ে পাবলিশ করেন।",
-            });
+          reply.status(400).send({
+            statusCode: 400,
+            message:
+              "আপনার বায়োডাটা পাবলিশ হবেনা। আপনি সব তথ্য দিয়ে পাবলিশ করেন।",
+          });
         }
       } catch (err) {
         reply.send("error");
@@ -373,7 +371,48 @@ async function routes(fastify, options, done) {
       const marriage = await collection.find({ isMarried: true }).count();
       reply.status(200).send({ male, female, marriage });
     } catch (err) {
-      reply.status(500).send({ message: err.message});
+      reply.status(500).send({ message: err.message });
+    }
+  });
+
+  fastify.get("/biodata/:id", async (request, reply) => {
+    try {
+      const projectionFields = {
+        email: 0,
+        comment: 0,
+        createdAt: 0,
+        updatedAt: 0,
+        socialName: 0,
+        social: 0,
+        _id: 0,
+        isDelete: 0,
+        isDisable: 0,
+        isMarried: 0,
+        isPublish: 0,
+        "generalInfo.name": 0,
+        "generalInfo.age": 0,
+        contact: 0,
+        isApproved: 0,
+        isVerify: 0,
+        social: 0,
+        password: 0,
+        "family.fatherName": 0,
+        "family.motherName": 0,
+      };
+      const result = await collection.findOne(
+        {
+          id: Number(request.params.id),
+        },
+        {
+          projection: { ...projectionFields },
+        }
+      );
+      if (!result) {
+        throw new Error("Invalid Id");
+      }
+      return result;
+    } catch (err) {
+      throw new Error(err);
     }
   });
 

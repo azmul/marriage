@@ -19,7 +19,7 @@ async function routes(fastify, options, done) {
   fastify.get("/candidates", async (request, reply) => {
     try {
       const {
-        current = 1,
+        page = 1,
         pageSize = DEFAULT_DATA_PER_PAGE,
         age,
         gender,
@@ -30,18 +30,29 @@ async function routes(fastify, options, done) {
         maritalStatus,
         parmanentDistrict,
       } = request.query;
-      const skips = Number(pageSize) * (Number(current) - 1);
+      const skips = Number(pageSize) * (Number(page) - 1);
 
       const projectionFields = {
+        email: 0,
+        comment: 0,
         createdAt: 0,
         updatedAt: 0,
         socialName: 0,
+        social: 0,
+        _id: 0,
         isDelete: 0,
         isDisable: 0,
         isMarried: 0,
         isPublish: 0,
         "generalInfo.name": 0,
+        "generalInfo.age": 0,
         contact: 0,
+        isApproved: 0,
+        isVerify: 0,
+        social: 0,
+        password: 0,
+        "family.fatherName": 0,
+        "family.motherName": 0,
       };
 
       const query = {
@@ -66,7 +77,7 @@ async function routes(fastify, options, done) {
 
       if (weight) {
         query["generalInfo.weight"] = {
-          $gte: 30,
+          $gte: 25,
           $lt: Number(weight) + 1,
         };
       }
@@ -95,7 +106,7 @@ async function routes(fastify, options, done) {
         pagination: {
           total: Number(total),
           pageSize: Number(pageSize),
-          current: Number(current),
+          page: Number(page),
         },
       });
     } catch (error) {
@@ -155,7 +166,7 @@ async function routes(fastify, options, done) {
     }
   );
 
-  fastify.get("/candidates/:id", async (request, reply) => {
+  fastify.get("/admin/candidates/:id", async (request, reply) => {
     try {
       const result = await candidates.findOne({
         id: Number(request.params.id),
