@@ -340,7 +340,7 @@ async function routes(fastify, options, done) {
           }
         );
         const isPublishPossibele = biodataCheckHandler(data);
-        if(isPublishPossibele) {
+        if (isPublishPossibele) {
           await collection.findOneAndUpdate(
             { email: request.user.email },
             { $set: { isPublish: true, updatedAt: new Date().toISOString() } }
@@ -352,13 +352,30 @@ async function routes(fastify, options, done) {
             }
           );
         } else {
-          reply.status(400).send({ statusCode: 400, message: "আপনার বায়োডাটা পাবলিশ হবেনা। আপনি সব তথ্য দিয়ে পাবলিশ করেন।"});
+          reply
+            .status(400)
+            .send({
+              statusCode: 400,
+              message:
+                "আপনার বায়োডাটা পাবলিশ হবেনা। আপনি সব তথ্য দিয়ে পাবলিশ করেন।",
+            });
         }
       } catch (err) {
         reply.send("error");
       }
     }
   );
+
+  fastify.get("/biodata/info", async (request, reply) => {
+    try {
+      const male = await collection.find({ "generalInfo.gender": 1 }).count();
+      const female = await collection.find({ "generalInfo.gender": 2 }).count();
+      const marriage = await collection.find({ isMarried: true }).count();
+      reply.status(200).send({ male, female, marriage });
+    } catch (err) {
+      reply.status(500).send({ message: err.message});
+    }
+  });
 
   done();
 }
