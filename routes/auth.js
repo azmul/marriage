@@ -97,7 +97,7 @@ async function routes(fastify, options) {
         if (!result) {
           reply
             .status(400)
-            .send({ statusCode: 400, message: "User Not Found" });
+            .send({ statusCode: 400, message: "ইউসার সঠিক না!" });
         }
         const validPassword = await bcrypt.compare(password, result.password);
 
@@ -107,7 +107,7 @@ async function routes(fastify, options) {
             message: "ইউসার ইমেইল অথবা পাসওয়ার্ড সঠিক না!",
           });
 
-        const token = fastify.jwt.sign({
+        const token = await fastify.jwt.sign({
           email: result.email,
           id: result.id,
         });
@@ -134,6 +134,12 @@ async function routes(fastify, options) {
         const { email, password } = request.body;
         if (!email && !password) {
           reply.send("Please give email and password");
+        }
+        const result = await collection.findOne({ email });
+        if (result) {
+          reply
+            .status(400)
+            .send({ statusCode: 400, message: "এই ইমেইল এর ইউসার আছে" });
         }
         const transporter = nodemailer.createTransport({
           service: "gmail",
