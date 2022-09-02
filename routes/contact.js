@@ -1,6 +1,7 @@
 import { createContactSchema } from "../schema/contact.js";
 import { contactPayload } from "../utils/contact.js";
 import { phoneNumberValidator } from "../utils/phValidator.js";
+import {DEFAULT_CONTACT_PER_PAGE } from "../constant/pagination.js";
 
 /**
  * A plugin that provide encapsulated routes
@@ -38,7 +39,7 @@ async function routes(fastify, options, next) {
   );
 
   fastify.get("/contact", async (req, rep) => {
-    const { current = 1, pageSize = 50, startDate, endDate } = req.query;
+    const { current = 1, pageSize = DEFAULT_CONTACT_PER_PAGE, startDate, endDate } = req.query;
 
     const skips = Number(pageSize) * (Number(current) - 1);
 
@@ -64,9 +65,9 @@ async function routes(fastify, options, next) {
       rep.status(200).send({
         data: items,
         pagination: {
-          total,
-          pageSize,
-          current,
+          total: Number(total),
+          pageSize: Number(pageSize),
+          current: Number(current),
         },
       });
     } catch (error) {

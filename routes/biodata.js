@@ -24,6 +24,8 @@ import {
   lifePartnerPayload,
 } from "../utils/biodata.js";
 
+import { biodataCheckHandler } from "../utils/biodataCheck.js";
+
 /**
  * A plugin that provide encapsulated routes
  * @param {FastifyInstance} fastify encapsulated fastify instance
@@ -34,13 +36,7 @@ async function routes(fastify, options, done) {
   const collection = fastify.mongo.db.collection("candidates");
 
   const projectionFields = {
-    createdAt: 0,
-    updatedAt: 0,
-    socialName: 0,
-    isDelete: 0,
-    isDisable: 0,
-    isMarried: 0,
-    isPublish: 0,
+    password: 0,
   };
 
   fastify.patch(
@@ -140,7 +136,7 @@ async function routes(fastify, options, done) {
         return await collection.findOne(
           { email: request.user.email },
           {
-            projection: { ...projectionFields }
+            projection: { ...projectionFields },
           }
         );
       } catch (err) {
@@ -301,6 +297,63 @@ async function routes(fastify, options, done) {
             projection: { ...projectionFields },
           }
         );
+      } catch (err) {
+        reply.send("error");
+      }
+    }
+  );
+
+  fastify.patch(
+    "/biodata/basic",
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      try {
+        await collection.findOneAndUpdate(
+          { email: request.user.email },
+          { $set: { ...request.body, updatedAt: new Date().toISOString() } }
+        );
+        return await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
+      } catch (err) {
+        reply.send("error");
+      }
+    }
+  );
+
+  fastify.get(
+    "/biodata/publish",
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      try {
+        const data = await collection.findOne(
+          { email: request.user.email },
+          {
+            projection: { ...projectionFields },
+          }
+        );
+        const isPublishPossibele = biodataCheckHandler(data);
+        if(isPublishPossibele) {
+          await collection.findOneAndUpdate(
+            { email: request.user.email },
+            { $set: { isPublish: true, updatedAt: new Date().toISOString() } }
+          );
+          return await collection.findOne(
+            { email: request.user.email },
+            {
+              projection: { ...projectionFields },
+            }
+          );
+        } else {
+          reply.status(400).send({ statusCode: 400, message: "আপনার বায়োডাটা পাবলিশ হবেনা। আপনি সব তথ্য দিয়ে পাবলিশ করেন।"});
+        }
       } catch (err) {
         reply.send("error");
       }

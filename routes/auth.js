@@ -18,7 +18,12 @@ async function routes(fastify, options) {
         reply.send("Invalid email");
       }
 
-      const result = await collection.findOne({ email });
+      const result = await collection.findOne(
+        { email },
+        {
+          projection: { password: 0 },
+        }
+      );
       if (!result) {
         const count = await collection.count();
         await collection.insertOne({
@@ -82,12 +87,10 @@ async function routes(fastify, options) {
       try {
         const { email, password } = request.body;
         if (!email && !password) {
-          reply
-            .status(400)
-            .send({
-              statusCode: 400,
-              message: "ইউসার ইমেইল অথবা পাসওয়ার্ড সঠিক না!",
-            });
+          reply.status(400).send({
+            statusCode: 400,
+            message: "ইউসার ইমেইল অথবা পাসওয়ার্ড সঠিক না!",
+          });
         }
 
         const result = await collection.findOne({ email });
@@ -99,12 +102,10 @@ async function routes(fastify, options) {
         const validPassword = await bcrypt.compare(password, result.password);
 
         if (!validPassword)
-          return reply
-            .status(400)
-            .send({
-              statusCode: 400,
-              message: "ইউসার ইমেইল অথবা পাসওয়ার্ড সঠিক না!",
-            });
+          return reply.status(400).send({
+            statusCode: 400,
+            message: "ইউসার ইমেইল অথবা পাসওয়ার্ড সঠিক না!",
+          });
 
         const token = fastify.jwt.sign({
           email: result.email,

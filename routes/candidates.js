@@ -18,75 +18,74 @@ async function routes(fastify, options, done) {
 
   fastify.get("/candidates", async (request, reply) => {
     try {
-    const {
-      page = 1,
-      size = DEFAULT_DATA_PER_PAGE,
-      age,
-      gender,
-      color,
-      height,
-      weight,
-      occupation,
-      maritalStatus,
-      parmanentDistrict,
-    } = request.query;
-    const skips = Number(size) * (Number(page) - 1);
+      const {
+        current = 1,
+        pageSize = DEFAULT_DATA_PER_PAGE,
+        age,
+        gender,
+        color,
+        height,
+        weight,
+        occupation,
+        maritalStatus,
+        parmanentDistrict,
+      } = request.query;
+      const skips = Number(pageSize) * (Number(current) - 1);
 
-    const projectionFields = {
-      createdAt: 0,
-      updatedAt: 0,
-      socialName: 0,
-      isDelete: 0,
-      isDisable: 0,
-      isMarried: 0,
-      isPublish: 0,
-      "generalInfo.name": 0,
-      contact: 0,
-    };
-
-    const query = {
-      isVerify: true,
-      isPublish: true,
-      isApproved: true,
-    };
-    
-    if (age) {
-      query["generalInfo.age"] = {
-        $gte: 6,
-        $lt: Number(age) + 1,
+      const projectionFields = {
+        createdAt: 0,
+        updatedAt: 0,
+        socialName: 0,
+        isDelete: 0,
+        isDisable: 0,
+        isMarried: 0,
+        isPublish: 0,
+        "generalInfo.name": 0,
+        contact: 0,
       };
-    }
 
-    if (height) {
-      query["generalInfo.height"] = {
-        $gte: 3.9,
-        $lt: Number(height) + 1,
+      const query = {
+        isVerify: true,
+        isPublish: true,
+        isApproved: true,
       };
-    }
 
-    if (weight) {
-      query["generalInfo.weight"] = {
-        $gte: 30,
-        $lt: Number(weight) + 1,
-      };
-    }
+      if (age) {
+        query["generalInfo.age"] = {
+          $gte: 6,
+          $lt: Number(age) + 1,
+        };
+      }
 
-    if (gender) query["generalInfo.gender"] = Number(gender);
-    if (color) query["generalInfo.color"] = Number(color);
-    if (occupation) query["generalInfo.occupation"] = Number(occupation);
-    if (parmanentDistrict)
-      query["generalInfo.parmanentDistrict"] = Number(parmanentDistrict);
-    if (maritalStatus)
-      query["generalInfo.maritalStatus"] = Number(maritalStatus);
+      if (height) {
+        query["generalInfo.height"] = {
+          $gte: 3.9,
+          $lt: Number(height) + 1,
+        };
+      }
 
-    
+      if (weight) {
+        query["generalInfo.weight"] = {
+          $gte: 30,
+          $lt: Number(weight) + 1,
+        };
+      }
+
+      if (gender) query["generalInfo.gender"] = Number(gender);
+      if (color) query["generalInfo.color"] = Number(color);
+      if (occupation) query["generalInfo.occupation"] = Number(occupation);
+      if (parmanentDistrict)
+        query["generalInfo.parmanentDistrict"] = Number(parmanentDistrict);
+      if (maritalStatus)
+        query["generalInfo.maritalStatus"] = Number(maritalStatus);
+
       const result = await candidates
         .find(query, {
           projection: { ...projectionFields },
         })
         .sort({ id: 1 })
         .skip(skips)
-        .limit(Number(size))
+        .limit(Number(pageSize))
         .toArray();
 
       const total = await candidates.find(query).count();
@@ -94,9 +93,9 @@ async function routes(fastify, options, done) {
       reply.status(200).send({
         data: result,
         pagination: {
-          total,
-          size: Number(size),
-          page: Number(page),
+          total: Number(total),
+          pageSize: Number(pageSize),
+          current: Number(current),
         },
       });
     } catch (error) {
@@ -111,16 +110,16 @@ async function routes(fastify, options, done) {
     },
     async (request, reply) => {
       const {
-        page = 1,
-        size = DEFAULT_DATA_PER_PAGE,
+        current = 1,
+        pageSize = DEFAULT_DATA_PER_PAGE,
         startDate,
         endDate,
       } = request.query;
-      const skips = Number(size) * (Number(page) - 1);
+
+      const skips = Number(pageSize) * (Number(current) - 1);
 
       const query = {
         isVerify: true,
-        isPublish: true,
       };
 
       if (startDate && endDate) {
@@ -131,21 +130,23 @@ async function routes(fastify, options, done) {
       }
 
       try {
-        const result = await candidates
+        const results = await candidates
           .find(query)
           .sort({ createdAt: -1 })
           .skip(skips)
-          .limit(Number(size))
+          .limit(Number(pageSize))
           .toArray();
+
+        console.log(results);
 
         const total = await candidates.find(query).count();
 
         reply.status(200).send({
-          data: result,
+          data: results,
           pagination: {
-            total,
-            size: Number(size),
-            page: Number(page),
+            total: Number(total),
+            pageSize: Number(pageSize),
+            current: Number(current),
           },
         });
       } catch (error) {
@@ -167,6 +168,24 @@ async function routes(fastify, options, done) {
       throw new Error(err);
     }
   });
+
+  fastify.get(
+    "/candidates/single",
+    {
+      onRequest: [fastify.authenticate],
+    },
+    async (request, reply) => {
+      try {
+        const result = await candidates.findOne({ email: request.user.email });
+        if (!result) {
+          throw new Error("Invalid Id");
+        }
+        return result;
+      } catch (err) {
+        throw new Error(err);
+      }
+    }
+  );
 
   fastify.post(
     "/candidates/request",
