@@ -1,3 +1,5 @@
+import { DEFAULT_DATA_PER_PAGE } from "../constant/pagination.js";
+
 /**
  * A plugin that provide encapsulated routes
  * @param {FastifyInstance} fastify encapsulated fastify instance
@@ -37,6 +39,75 @@ async function routes(fastify, options, next) {
     }
   );
 
+  fastify.get(
+    "/admin/notification",
+    {
+      onRequest: [fastify.adminAuthenticate],
+    },
+    async (request, reply) => {
+      const {
+        current = 1,
+        pageSize = DEFAULT_DATA_PER_PAGE,
+        startDate,
+        endDate,
+      } = request.query;
+
+      const skips = Number(pageSize) * (Number(current) - 1);
+
+      const query = {};
+
+      if (startDate && endDate) {
+        query.createdAt = {
+          $gte: new Date(startDate).toISOString(),
+          $lt: new Date(endDate).toISOString(),
+        };
+      }
+
+      try {
+        const results = await candidateRequest
+          .find(query)
+          .sort({ createdAt: -1 })
+          .skip(skips)
+          .limit(Number(pageSize))
+          .toArray();
+
+        const total = await candidateRequest.find(query).count();
+
+        reply.status(200).send({
+          data: results,
+          pagination: {
+            total: Number(total),
+            pageSize: Number(pageSize),
+            current: Number(current),
+          },
+        });
+      } catch (error) {
+        reply.status(500).send(error);
+      }
+    }
+  );
+
+  fastify.get(
+    "/admin/notification/:id",
+    {
+      onRequest: [fastify.adminAuthenticate],
+    },
+    async (request, reply) => {
+      try {
+        const id = Number(request.params.id);
+        const result = await candidateRequest.findOne({
+          id: id,
+        });
+        if (!result) {
+          throw new Error("Invalid Id");
+        }
+        return result;
+      } catch (err) {
+        throw new Error(err);
+      }
+    }
+  );
+
   fastify.post(
     "/notification/:id/:bioId/:requestId",
     {
@@ -61,7 +132,7 @@ async function routes(fastify, options, next) {
             break;
           }
         }
-          
+
         if (index > -1) {
           biodatas[index] = { ...biodatas[index], ...request.body };
 
