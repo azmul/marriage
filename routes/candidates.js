@@ -11,9 +11,10 @@ import { candidatesRequestPayload } from "../utils/candidates.js";
 async function routes(fastify, options, done) {
   const candidates = fastify.mongo.db.collection("candidates");
   const candidateRequest = fastify.mongo.db.collection("candidateRequest");
+  const seperateRequest = fastify.mongo.db.collection("seperateRequest");
 
   fastify.get("/", { preHandler: userCheck }, async (request, reply) => {
-    return { message: "Hello Sunnah Kobul dot com" };
+    return { message: "Hello Sunnah Shadi dot com" };
   });
 
   fastify.get("/candidates", async (request, reply) => {
@@ -148,8 +149,6 @@ async function routes(fastify, options, done) {
           .limit(Number(pageSize))
           .toArray();
 
-        console.log(results);
-
         const total = await candidates.find(query).count();
 
         reply.status(200).send({
@@ -207,15 +206,38 @@ async function routes(fastify, options, done) {
       try {
         const payload = candidatesRequestPayload(request.body);
         const { biodatas } = payload;
-        const ids = biodatas && biodatas.map((biodata) => biodata.id);
-        const contacts = await candidates
-          .find(
-            { id: { $in: ids } },
-            { projection: { id: 1, contact: 1, _id: 0 } }
-          )
-          .toArray();
-        await candidateRequest.insertOne({ ...payload, contacts });
-        reply.status(201).send(payload);
+
+        if (biodatas.length > 0) {
+          const ids = biodatas && biodatas.map((biodata) => biodata.id);
+          const count = await candidateRequest.count() + 1;
+          const contacts = await candidates
+            .find(
+              { id: { $in: ids } },
+              { projection: { id: 1, contact: 1, _id: 0 } }
+            )
+            .toArray();
+          await candidateRequest.insertOne({ ...payload, id: count, contacts });
+
+          let promises = [];
+          let index = 0;
+
+          while (index <= contacts.length - 1) {
+            promises.push(
+              seperateRequest.insertOne({
+                requestId: count,
+                bioId: biodatas[index].id,
+                isDone: false,
+                isCancel: false,
+                comment: null,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              })
+            );
+            index += 1;
+          }
+          await Promise.all(promises);
+          reply.status(201).send(payload);
+        }
       } catch (error) {
         reply.status(500).send(error);
       }
