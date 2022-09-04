@@ -14,7 +14,7 @@ async function routes(fastify, options, done) {
   const seperateRequest = fastify.mongo.db.collection("seperateRequest");
 
   fastify.get("/", { preHandler: userCheck }, async (request, reply) => {
-    return { message: "Hello Sunnah Shadi dot com" };
+    return { message: "Hello Deener Sathi dot com" };
   });
 
   fastify.get("/candidates", async (request, reply) => {
@@ -30,6 +30,7 @@ async function routes(fastify, options, done) {
         occupation,
         maritalStatus,
         parmanentDistrict,
+        parmanentDivision
       } = request.query;
       const skips = Number(pageSize) * (Number(page) - 1);
 
@@ -88,6 +89,8 @@ async function routes(fastify, options, done) {
       if (occupation) query["generalInfo.occupation"] = Number(occupation);
       if (parmanentDistrict)
         query["generalInfo.parmanentDistrict"] = Number(parmanentDistrict);
+        if (parmanentDivision)
+        query["generalInfo.parmanentDivision"] = Number(parmanentDivision);
       if (maritalStatus)
         query["generalInfo.maritalStatus"] = Number(maritalStatus);
 
