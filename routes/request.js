@@ -108,7 +108,7 @@ async function routes(fastify, options, next) {
     }
   );
 
-  fastify.post(
+  fastify.patch(
     "/notification/:id/:bioId/:requestId",
     {
       onRequest: [fastify.authenticate],
@@ -160,6 +160,95 @@ async function routes(fastify, options, next) {
         } else {
           reply.send({ message: "Not Updated" });
         }
+      } catch (err) {
+        reply.send({ message: err?.message });
+      }
+    }
+  );
+
+  fastify.patch(
+    "/admin/notification/:id/:bioId/:requestId",
+    {
+      onRequest: [fastify.adminAuthenticate],
+    },
+    async (request, reply) => {
+      try {
+        const id = fastify.mongo.ObjectId(request.params.id);
+        const bioId = Number(request.params.bioId);
+        const requestId = Number(request.params.requestId);
+
+        const requestItem = await candidateRequest.findOne(
+          { _id: id },
+          { projection: { id: 1, biodatas: 1, _id: 1 } }
+        );
+
+        const biodatas = [...requestItem.biodatas];
+        let index = -1;
+        for (let i = 0; i < biodatas.length; i++) {
+          if (biodatas[i].id === bioId) {
+            index = i;
+            break;
+          }
+        }
+
+        if (index > -1) {
+          biodatas[index] = { ...biodatas[index], ...request.body };
+
+          await seperateRequest.findOneAndUpdate(
+            { bioId: bioId, requestId: requestId },
+            {
+              $set: {
+                ...request.body,
+                updatedAt: new Date().toISOString(),
+              },
+            }
+          );
+
+          await candidateRequest.findOneAndUpdate(
+            { id: requestId },
+            {
+              $set: {
+                biodatas,
+                updatedAt: new Date().toISOString(),
+              },
+            }
+          );
+
+          const requestUpdateData = await candidateRequest.findOne({
+            id: requestId,
+          });
+
+          return requestUpdateData;
+        } else {
+          reply.send({ message: "Not Updated" });
+        }
+      } catch (err) {
+        reply.send({ message: err?.message });
+      }
+    }
+  );
+
+  fastify.patch(
+    "/admin/notification/request/:id",
+    {
+      onRequest: [fastify.adminAuthenticate],
+    },
+    async (request, reply) => {
+      try {
+        const id = fastify.mongo.ObjectId(request.params.id);
+         
+        await candidateRequest.findOneAndUpdate(
+          { _id: id },
+          {
+            $set: {
+              ...request.body,
+              updatedAt: new Date().toISOString(),
+            },
+          }
+        );
+
+        reply.send({ message: "Updated" });
+
       } catch (err) {
         reply.send({ message: err?.message });
       }
