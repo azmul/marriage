@@ -366,9 +366,9 @@ async function routes(fastify, options, done) {
 
   fastify.get("/biodata/info", async (request, reply) => {
     try {
-      const male = await collection.find({ "generalInfo.gender": 1 }).count();
-      const female = await collection.find({ "generalInfo.gender": 2 }).count();
-      const marriage = await collection.find({ isMarried: true }).count();
+      const male = await collection.find({ "generalInfo.gender": 1, isPublish: true, isApproved: true }).count();
+      const female = await collection.find({ "generalInfo.gender": 2, isPublish: true, isApproved: true }).count();
+      const marriage = await collection.find({ isPublish: true, isApproved: true, isMarried: true }).count();
       reply.status(200).send({ male, female, marriage });
     } catch (err) {
       reply.status(500).send({ message: err.message });

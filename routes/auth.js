@@ -185,11 +185,13 @@ async function routes(fastify, options) {
         const info = await transporter.sendMail({
           from: "sunnahkobul@gmail.com", // sender address
           to: email, // list of receivers
-          subject: "SignUp", // Subject line
-          text: "SignUp Process", // plain text body
-          html: `<b><a href="${process.env.BE_URL}/user/verify?active_id=${
+          subject: "SignUp Process", // Subject line
+          text: "সাইনআপ করুন", // plain text body
+          html: `<div> <h1>সুন্নাহ শাদী ওয়েবসাইট এর পক্ষ থেকে আপনাকে স্বাগতম</h1><h3><b><a href="${
+            process.env.BE_URL
+          }/user/verify?active_id=${
             count + 1
-          }">আপনার একাউন্ট একটিভ করতে এখানে ক্লিক করুন.</a></b>`, // html body
+          }">আপনার একাউন্ট একটিভ করতে এখানে ক্লিক করুন.</a></b> </h3><div><a href="https://www.sunnahshadi.com/">বিস্তারিত জানতে ক্লিক করুন</a></div> </div>`, // html body
         });
 
         reply.send({
@@ -245,9 +247,9 @@ async function routes(fastify, options) {
       const info = await transporter.sendMail({
         from: "sunnahkobul@gmail.com", // sender address
         to: email, // list of receivers
-        subject: "Password Recover", // Subject line
+        subject: "Password Recover Process", // Subject line
         text: "Password Recover", // plain text body
-        html: `<b><a href="${process.env.FE_URL}/setpassword?email=${email}&active_id=${result.id}">আপনার পাসওয়ার্ডটি পুনুরায় সেট করতে এখানে ক্লিক করুন.</a></b>`, // html body
+        html: `<div><h1>সুন্নাহ শাদী ওয়েবসাইট এর পক্ষ থেকে আপনাকে স্বাগতম</h1> <h3><b><a href="${process.env.FE_URL}/setpassword?email=${email}&active_id=${result.id}">আপনার পাসওয়ার্ডটি পুনুরায় সেট করতে এখানে ক্লিক করুন.</a></b></h3><div><a href="https://www.sunnahshadi.com/">বিস্তারিত জানতে ক্লিক করুন</a></div></div>`, // html body
       });
 
       reply.send({
