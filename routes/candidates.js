@@ -14,7 +14,7 @@ async function routes(fastify, options, done) {
   const seperateRequest = fastify.mongo.db.collection("seperateRequest");
 
   fastify.get("/", { preHandler: userCheck }, async (request, reply) => {
-    return { message: "Hello Deener Sathi dot com" };
+    return { message: "Hello Sunnah Shadi dot com" };
   });
 
   fastify.get("/candidates", async (request, reply) => {
