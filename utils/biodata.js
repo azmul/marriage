@@ -81,6 +81,7 @@ export const lifePartnerPayload = (data) => {
     minimumHeight: data.minimumHeight,
     minimumEducation: data.minimumEducation,
     district: data.district,
+    division: data.division,
     maritalStatus: data.maritalStatus,
     occupation: data.occupation,
     economicalStatus: data.economicalStatus,
