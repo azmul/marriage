@@ -185,8 +185,8 @@ async function routes(fastify, options) {
         const info = await transporter.sendMail({
           from: "sunnahkobul@gmail.com", // sender address
           to: email, // list of receivers
-          subject: "SignUp Process", // Subject line
-          text: "সাইনআপ করুন", // plain text body
+          subject: "সুন্নাহ শাদী - সাইনআপ", // Subject line
+          text: "সুন্নাহ শাদী - সাইনআপ করুন", // plain text body
           html: `<div> <h1>সুন্নাহ শাদী ওয়েবসাইট এর পক্ষ থেকে আপনাকে স্বাগতম</h1><h3><b><a href="${
             process.env.BE_URL
           }/user/verify?active_id=${
@@ -238,8 +238,8 @@ async function routes(fastify, options) {
         port: 587,
         secure: false, // true for 465, false for other ports
         auth: {
-          user: process.env.SIGN_UP_AUTH_USER, // generated ethereal user
-          pass: process.env.SIGN_UP_AUTH_PASSWORD, // generated ethereal password
+          user: process.env.SIGN_UP_AUTH_USER, 
+          pass: process.env.SIGN_UP_AUTH_PASSWORD, 
         },
       });
 
@@ -247,8 +247,8 @@ async function routes(fastify, options) {
       const info = await transporter.sendMail({
         from: "sunnahkobul@gmail.com", // sender address
         to: email, // list of receivers
-        subject: "Password Recover Process", // Subject line
-        text: "Password Recover", // plain text body
+        subject: "সুন্নাহ শাদী - পাসওয়ার্ড রিকভার", // Subject line
+        text: "সুন্নাহ শাদী - পাসওয়ার্ড রিকভার", // plain text body
         html: `<div><h1>সুন্নাহ শাদী ওয়েবসাইট এর পক্ষ থেকে আপনাকে স্বাগতম</h1> <h3><b><a href="${process.env.FE_URL}/setpassword?email=${email}&active_id=${result.id}">আপনার পাসওয়ার্ডটি পুনুরায় সেট করতে এখানে ক্লিক করুন.</a></b></h3><div><a href="https://www.sunnahshadi.com/">বিস্তারিত জানতে ক্লিক করুন</a></div></div>`, // html body
       });
 
