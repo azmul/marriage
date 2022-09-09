@@ -98,7 +98,7 @@ async function routes(fastify, options, done) {
         .find(query, {
           projection: { ...projectionFields },
         })
-        .sort({ id: 1 })
+        .sort({ createdAt: -1 })
         .skip(skips)
         .limit(Number(pageSize))
         .toArray();
